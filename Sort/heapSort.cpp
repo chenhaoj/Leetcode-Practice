@@ -1,5 +1,6 @@
-// #include<iostream>
+#include<iostream>
 #include<vector>
+using namespace std;
 
 // 堆排序，以生成大根堆/小根堆
 // nums:待排序的数组.   i:排序的起点.   n:排序的终点.
@@ -11,7 +12,7 @@ void adjustHeap(std::vector<int> &nums, int i, int n) {
             child++;
         }
         if(nums[parent] < nums[child]) {
-            swap(nums[parent], nums[child]);
+            std::swap(nums[parent], nums[child]);
             parent = child;
         }
         child = 2 * child + 1;
@@ -29,7 +30,7 @@ void buildHeap(std::vector<int> &nums) {
 void heap_sort(std::vector<int> &nums) {
     buildHeap(nums);
     for(int i = nums.size()-1; i >= 0; --i) {
-        swap(nums[0], nums[i]);
+        std::swap(nums[0], nums[i]);
         adjustHeap(nums, 0, i); // WARN：这里非常关键！因为本身已经是大/小跟堆，因此可以借助adjustHeap中child的变化实现堆的排序；
                                 //      初始化的时候不行，因为初始化时完全乱序，如果从根节点开始，那么上层的走下来之后就无法回溯。      
     }
