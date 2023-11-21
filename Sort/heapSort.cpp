@@ -1,37 +1,54 @@
 #include<iostream>
 #include<vector>
+#include<algorithm>
 using namespace std;
 
-// 堆排序，以生成大根堆/小根堆
-// nums:待排序的数组.   i:排序的起点.   n:排序的终点.
-void adjustHeap(std::vector<int> &nums, int i, int n) {
-    int parent = i; // 当前树的根
-    int child = 2 * i + 1; // 左孩子
-    while(child < n) {
-        if(child + 1 < n && nums[child] < nums[child+1]) {
+void adjustHeap(vector<int>& nums, int start, int end) {
+    int parent = start;
+    int child = 2*start+1;
+    while(child < end) {
+        if(child+1 < end && nums[child] > nums[child+1]) {
             child++;
         }
-        if(nums[parent] < nums[child]) {
-            std::swap(nums[parent], nums[child]);
+        if(nums[child] < nums[parent]) {
+            swap(nums[child], nums[parent]);
             parent = child;
         }
-        child = 2 * child + 1;
+        child = 2*child + 1;
     }
 }
 
-// 初始化堆
-void buildHeap(std::vector<int> &nums) {
-    for(int i = nums.size()/2-1; i >= 0; --i) {
+void buildHeap(vector<int>& nums) {
+    for(int i = nums.size()/2-1; i >= 0; i--) {
         adjustHeap(nums, i, nums.size());
     }
 }
 
-// 交换堆的根节点和尾节点，并从堆的尾节点取数，重新调整堆
-void heap_sort(std::vector<int> &nums) {
+void heapSort(vector<int>& nums) {
     buildHeap(nums);
-    for(int i = nums.size()-1; i >= 0; --i) {
-        std::swap(nums[0], nums[i]);
-        adjustHeap(nums, 0, i); // WARN：这里非常关键！因为本身已经是大/小跟堆，因此可以借助adjustHeap中child的变化实现堆的排序；
-                                //      初始化的时候不行，因为初始化时完全乱序，如果从根节点开始，那么上层的走下来之后就无法回溯。      
+    for(int i = 0; i < nums.size(); i++) {
+        cout << nums[i] << " ";
     }
+    cout << endl;
+    for(int i = nums.size()-1; i > 0; i--) {
+        swap(nums[0], nums[i]);
+        adjustHeap(nums, 0, i);
+    }
+}
+
+int main() {
+    int n;
+    vector<int> nums;
+    while(cin >> n) {
+        if(getchar() == '\n') {
+            nums.push_back(n);
+            heapSort(nums);
+            for(int i = 0; i < nums.size(); i++)
+                cout << nums[i] << " ";
+            nums.clear();
+        } else {
+            nums.push_back(n);
+        }
+    }
+    return 0;
 }

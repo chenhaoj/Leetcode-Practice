@@ -101,6 +101,14 @@ private:
     unordered_map<int, list<pair<int, int> >::iterator> hash;
 };
 
+struct DLinkedNode {
+    int key, value;
+    DLinkedNode* prev;
+    DLinkedNode* next;
+    DLinkedNode(): key(0), value(0), prev(nullptr), next(nullptr){}
+    DLinkedNode(int _key, int _val): key(_key), value(_val), prev(nullptr), next(nullptr){}
+};
+
 int main() {
     LRUCache* lru = new LRUCache(2);
     lru->put(1, 1);
@@ -112,5 +120,8 @@ int main() {
     cout << lru->get(1);
     cout << lru->get(3);
     cout << lru->get(4);
+    unordered_map<int, DLinkedNode*> ump;
+    DLinkedNode* node = new DLinkedNode();
+    ump.insert(make_pair(1, node));
     return 0;
 }

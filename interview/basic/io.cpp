@@ -1,5 +1,6 @@
 #include<iostream>
 #include<vector>
+#include<queue>
 #include<cstdio>
 #include<cstdlib>
 #include<sstream>
@@ -140,6 +141,29 @@ using namespace std;
 //     return 0;
 // }
 
+/* 引申: 不确定数目的二维数组
+ */
+// int main() {
+//     vector<int> a, b;
+//     string s1, s2;
+//     cin >> s1;
+//     cin >> s2;
+//     string tmp;
+//     stringstream ss;
+    
+//     ss << s1;
+//     while(getline(ss, tmp, ',')) {
+//         a.push_back(stoi(tmp));
+//     }
+//     ss.clear();
+//     ss << s2;
+//     while(getline(ss, tmp, ',')) {
+//         b.push_back(stoi(tmp));
+//     }
+//     ss.clear();
+//     return 0;
+// }
+
 /* ④字符串（固定数目）
  */
 // int main() {
@@ -238,3 +262,70 @@ using namespace std;
 //     }
 //     return 0;
 // }
+
+/* 自建树 */
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int x): val(x), left(NULL), right(NULL) {}
+};
+
+// 根据数组构造二叉树
+TreeNode* construct_binary_tree(const vector<int> &vec) {
+    // 数值转二叉树节点
+    vector<TreeNode*> vecTree(vec.size(), NULL);
+    TreeNode* root = NULL;
+    for(int i = 0; i < vec.size(); i++) {
+        TreeNode* node = NULL;
+        if(vec[i] != -1) node = new TreeNode(vec[i]);
+        vecTree[i] = node;
+        if(i == 0) root = node;
+    }
+
+    // 节点数组转二叉树
+    for(int i = 0; i * 2 + 1 < vec.size(); i++) {
+        if(vecTree[i] != NULL) {
+            vecTree[i]->left = vecTree[i*2+1];
+            if(i*2+2 < vec.size())
+                vecTree[i]->right = vecTree[i*2+2];
+        }
+    }
+    return root;
+}
+
+// 层序遍历打印二叉树
+void print_binary_tree(TreeNode* root) {
+    queue<TreeNode*> q;
+    if(root != NULL) q.push(root);
+    vector<vector<int> > result;
+    while(!q.empty()) {
+        int size = q.size();
+        vector<int> vec;
+        for(int i = 0; i < size; i++) {
+            TreeNode* node = q.front();
+            q.pop();
+            if(node != NULL) {
+                vec.push_back(node->val);
+                q.push(node->left);
+                q.push(node->right);
+            }
+            else vec.push_back(-1);
+        }
+        result.push_back(vec);
+    }
+    for(int i = 0; i < result.size(); i++) {
+        for(int j = 0; j < result[i].size(); j++) {
+            cout << result[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+int main() {
+    // 注意本代码没有考虑输入异常数据的情况
+    // 用 -1 来表示null
+    vector<int> vec = {4,1,6,0,2,5,7,-1,-1,-1,3,-1,-1,-1,8};
+    TreeNode* root = construct_binary_tree(vec);
+    print_binary_tree(root);
+}
